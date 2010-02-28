@@ -18,18 +18,28 @@ if not os.path.isdir( sharepath ):
 
 
 class OneBatteryStatusIcon( gtk.StatusIcon ):
+    """\
+    Battery monitor status icon class, derived from GTK StatusIcon.
+    """
     def __init__( self ):
+        """\
+        Constructor.
+        """
         gtk.StatusIcon.__init__( self )
         self.file_acstate = "/proc/acpi/ac_adapter/ADP0/state"
         self.file_batstate = "/proc/acpi/battery/BAT0/state"
         self.file_batinfo = "/proc/acpi/battery/BAT0/info"
-        self.set_from_file( os.path.join( sharepath, "icons", "battery-missing.png" ) )
+        self.set_from_file( os.path.join( sharepath, "icons",
+                            "battery-missing.png" ) )
         self.set_visible( True )
         self.update()
         # update every 20 seconds
         timeout_add( 20000, self.on_timeout )
 
     def update( self ):
+        """\
+        Update the status icon.
+        """
         # set icon
         icon = "battery-"
         if self.battery_level == 100.0 and self.ac_adapter_online:
@@ -57,27 +67,39 @@ class OneBatteryStatusIcon( gtk.StatusIcon ):
             tooltip += " (AC)"
         self.set_tooltip( tooltip )
 
-    def on_timeout( self, *args ):
+    def on_timeout( self ):
+        """\
+        Timeout callback for update.
+        """
         self.update()
         return True
 
     @property
     def ac_adapter_online( self ):
-        if open( self.file_acstate ).readline().split()[ 1 ] == 'on-line':
+        """\
+        Returns whether the AC adapter is on-line.
+        """
+        if open( self.file_acstate ).readline().split()[1] == 'on-line':
             return True
         return False
 
     @property
     def battery_charging( self ):
-        if open( self.file_batstate ).readlines()[ 2 ].split()[ 2 ] == 'charging':
+        """\
+        Returns whether the battery is charging.
+        """
+        if open( self.file_batstate ).readlines()[2].split()[2] == 'charging':
             return True
         return False
 
     @property
     def battery_level( self ):
+        """\
+        Returns the battery level as a percentage.
+        """
         return 100.0 * \
-            float( open( self.file_batstate ).readlines()[ 4 ].split()[ 2 ] ) \
-            / float( open( self.file_batinfo ).readlines()[ 2 ].split()[ 3 ] )
+            float( open( self.file_batstate ).readlines()[4].split()[2] ) \
+            / float( open( self.file_batinfo ).readlines()[2].split()[3] )
 
 
 if __name__ == '__main__':
