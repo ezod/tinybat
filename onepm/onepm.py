@@ -8,6 +8,7 @@ OnePM battery monitor and power manager.
 
 import os
 import gtk
+import gobject
 from sys import prefix
 
 
@@ -25,6 +26,7 @@ class OneBatteryStatusIcon( gtk.StatusIcon ):
         self.set_from_file( os.path.join( sharepath, "icons", "battery-missing.png" ) )
         self.set_visible( True )
         self.update()
+        gobject.timeout_add( 20000, self.on_timeout )
 
     def update( self ):
         # set icon
@@ -51,6 +53,10 @@ class OneBatteryStatusIcon( gtk.StatusIcon ):
         if self.battery_charging:
             tooltip += " (Charging)"
         self.set_tooltip( tooltip )
+
+    def on_timeout( self, *args ):
+        self.update()
+        return True
 
     @property
     def ac_adapter_online( self ):
