@@ -1,5 +1,5 @@
 """\
-OnePM battery monitor and power manager.
+Tinybat - a standalone battery monitor for the rest of us.
 
 @author: Aaron Mavrinac
 @contact: mavrinac@gmail.com
