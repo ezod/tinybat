@@ -1,0 +1,11 @@
+                      Tinybat - Standalone Battery Monitor 
+                      Aaron Mavrinac  <mavrinac@gmail.com>
+
+--------------------------------------------------------------------------------
+
+REQUIREMENTS
+
+Tinybat requires Python (2.5 or later) [1] and PyGTK (2.0 or later) [2].
+
+[1] http://www.python.org
+[2] http://www.pygtk.org/
