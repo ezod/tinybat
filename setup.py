@@ -7,7 +7,7 @@ from sys import prefix
 from setuptools import setup
 
 setup(
-    name = "Tinybat",
+    name = "tinybat",
     version = version,
     license = "GPL",
     description = "A standalone battery monitor for the rest of us.",
