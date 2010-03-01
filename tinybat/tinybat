@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """\
 Tinybat - a standalone battery monitor for the rest of us.
 
@@ -12,12 +14,12 @@ from gobject import timeout_add
 from sys import prefix
 
 
-sharepath = os.path.join( prefix, "share/onepm" )
+sharepath = os.path.join( prefix, "share/tinybat" )
 if not os.path.isdir( sharepath ):
     sharepath = "../data"
 
 
-class OneBatteryStatusIcon( gtk.StatusIcon ):
+class BatteryStatusIcon( gtk.StatusIcon ):
     """\
     Battery monitor status icon class, derived from GTK StatusIcon.
     """
@@ -103,5 +105,5 @@ class OneBatteryStatusIcon( gtk.StatusIcon ):
 
 
 if __name__ == '__main__':
-    battery_status = OneBatteryStatusIcon()
+    tb = BatteryStatusIcon()
     gtk.main()
