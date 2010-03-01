@@ -28,9 +28,10 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         Constructor.
         """
         gtk.StatusIcon.__init__( self )
-        self.file_acstate = "/proc/acpi/ac_adapter/ADP0/state"
-        self.file_batstate = "/proc/acpi/battery/BAT0/state"
-        self.file_batinfo = "/proc/acpi/battery/BAT0/info"
+        self.file_adpst = "/sys/class/power_supply/ADP0/online"
+        self.file_batst = "/sys/class/power_supply/BAT0/status"
+        self.file_batcf = "/sys/class/power_supply/BAT0/charge_full"
+        self.file_batcn = "/sys/class/power_supply/BAT0/charge_now"
         self.set_from_file( os.path.join( sharepath, "icons",
                             "battery-missing.png" ) )
         self.set_visible( True )
@@ -55,11 +56,8 @@ class BatteryStatusIcon( gtk.StatusIcon ):
             icon += "-charging"
         self.set_from_file( os.path.join( sharepath, "icons", icon + ".png" ) )
         # set tooltip
-        tooltip = "Battery " + str( int( self.battery_level ) ) + "%"
-        if self.battery_charging:
-            tooltip += " (Charging)"
-        elif self.ac_adapter_online:
-            tooltip += " (AC)"
+        tooltip = "Battery " + str( int( self.battery_level ) ) + "% (" + \
+                  open( self.file_batst ).readline().rstrip() + ")"
         self.set_tooltip( tooltip )
 
     def on_timeout( self ):
@@ -74,7 +72,7 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         """\
         Returns whether the AC adapter is on-line.
         """
-        if open( self.file_acstate ).readline().split()[1] == 'on-line':
+        if open( self.file_adpst ).readline().rstrip() == '1':
             return True
         return False
 
@@ -83,7 +81,7 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         """\
         Returns whether the battery is charging.
         """
-        if open( self.file_batstate ).readlines()[2].split()[2] == 'charging':
+        if open( self.file_batst ).readline().rstrip() == 'Charging':
             return True
         return False
 
@@ -93,8 +91,8 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         Returns the battery level as a percentage.
         """
         return 100.0 * \
-            float( open( self.file_batstate ).readlines()[4].split()[2] ) \
-            / float( open( self.file_batinfo ).readlines()[2].split()[3] )
+            float( open( self.file_batcn ).readline() ) \
+            / float( open( self.file_batcf ).readline() )
 
 
 if __name__ == '__main__':
