@@ -35,8 +35,8 @@ class BatteryStatusIcon( gtk.StatusIcon ):
                             "battery-missing.png" ) )
         self.set_visible( True )
         self.update()
-        # update every 20 seconds
-        timeout_add( 20000, self.on_timeout )
+        # update every 5 seconds
+        timeout_add( 5000, self.on_timeout )
 
     def update( self ):
         """\
