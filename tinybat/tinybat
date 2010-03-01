@@ -48,16 +48,9 @@ class BatteryStatusIcon( gtk.StatusIcon ):
             icon += "charged"
         elif self.battery_level > 95.0:
             icon += "100"
-        elif self.battery_level > 80.0:
-            icon += "080"
-        elif self.battery_level > 60.0:
-            icon += "060"
-        elif self.battery_level > 40.0:
-            icon += "040"
-        elif self.battery_level > 20.0:
-            icon += "020"
         else:
-            icon += "000"
+            icon += "%03d" % ( int( self.battery_level ) \
+                - int( self.battery_level ) % 20 )
         if self.battery_level < 100.0 and self.battery_charging:
             icon += "-charging"
         self.set_from_file( os.path.join( sharepath, "icons", icon + ".png" ) )
