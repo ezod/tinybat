@@ -34,8 +34,10 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         adp = "ac"
         bat = "battery"
         try:
-            adp = [ f for f in os.listdir( acpidir ) if f.lower()[ 0 ] == 'a' ][ 0 ]
-            bat = [ f for f in os.listdir( acpidir ) if f.lower()[ 0 ] == 'b' ][ 0 ]
+            adp = [ f for f in os.listdir( acpidir ) \
+                if f.lower()[ 0 ] == 'a' ][ 0 ]
+            bat = [ f for f in os.listdir( acpidir ) \
+                if f.lower()[ 0 ] == 'b' ][ 0 ]
         except IndexError:
             pass
         self.file_adpst = os.path.join( acpidir, adp, "online" )
