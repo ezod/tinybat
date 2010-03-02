@@ -28,16 +28,34 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         Constructor.
         """
         gtk.StatusIcon.__init__( self )
-        self.file_adpst = "/sys/class/power_supply/ADP0/online"
-        self.file_batst = "/sys/class/power_supply/BAT0/status"
-        self.file_batcf = "/sys/class/power_supply/BAT0/charge_full"
-        self.file_batcn = "/sys/class/power_supply/BAT0/charge_now"
+
+        # set up ACPI files
+        acpidir = "/sys/class/power_supply"
+        adp = "ac"
+        bat = "battery"
+        try:
+            adp = [ f for f in os.listdir( acpidir ) if f.lower()[ 0 ] == 'a' ][ 0 ]
+            bat = [ f for f in os.listdir( acpidir ) if f.lower()[ 0 ] == 'b' ][ 0 ]
+        except IndexError:
+            pass
+        self.file_adpst = os.path.join( acpidir, adp, "online" )
+        self.file_batst = os.path.join( acpidir, bat, "status" )
+        self.file_batcf = os.path.join( acpidir, bat, "charge_full" )
+        self.file_batcn = os.path.join( acpidir, bat, "charge_now" )
+
+        # initialize icon
         self.set_from_file( os.path.join( sharepath, "icons",
                             "battery-missing.png" ) )
+        self.set_tooltip( "Battery Not Found" )
         self.set_visible( True )
-        self.update()
-        # update every 5 seconds
-        timeout_add( 5000, self.on_timeout )
+
+        # set up updates if file paths are correct
+        if os.path.isfile( self.file_adpst ) and \
+           os.path.isfile( self.file_batst ) and \
+           os.path.isfile( self.file_batcf ) and \
+           os.path.isfile( self.file_batcn ):
+            self.update()
+            timeout_add( 5000, self.on_timeout )
 
     def update( self ):
         """\
