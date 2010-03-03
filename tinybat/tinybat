@@ -65,16 +65,18 @@ class BatteryStatusIcon( gtk.StatusIcon ):
         """
         # set icon
         icon = "battery-"
-        if self.battery_level == 100.0 and self.ac_adapter_online:
+        if self.battery_level >= 100.0 and self.ac_adapter_online:
             icon += "charged"
         elif self.battery_level > 95.0:
             icon += "100"
         else:
             icon += "%03d" % ( int( self.battery_level ) \
                 - int( self.battery_level ) % 20 )
-        if self.battery_level < 100.0 and self.battery_charging:
+        if self.battery_level < 100.0 \
+        and ( self.battery_charging or self.ac_adapter_online ):
             icon += "-charging"
         self.set_from_file( os.path.join( sharepath, "icons", icon + ".png" ) )
+
         # set tooltip
         tooltip = "Battery " + str( int( self.battery_level ) ) + "% (" + \
                   open( self.file_batst ).readline().rstrip() + ")"
